@@ -39,7 +39,7 @@ while True:
 
     # HSV values
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lowerLightBlue = np.array([30, 35, 170])
+    lowerLightBlue = np.array([30, 35, 150])
     upperLightBlue = np.array([60, 80, 255])
     
     # For each every pixel, checks if every pixel in that channel is w/in range
