@@ -65,6 +65,7 @@ se = np.ones((se_size,se_size), np.uint8)
 
 type = cv2.MORPH_CLOSE
 res3 = cv2.morphologyEx(res2, type, kernel=se)
+res3 = cv2.morphologyEx(res3, cv2.MORPH_ERODE, kernel=se)
 
 while True:
     cv2.imshow("Areas with vertical pattern annotated",res3)
