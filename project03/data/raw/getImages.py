@@ -85,6 +85,7 @@ def main():
 
         img_w = media.get("width")
         img_h = media.get("height")
+        exif_rotation = media.get("exif_rotation", 1)
 
         for project_data in record.get("projects", {}).values():
             for label_entry in project_data.get("labels", []):
@@ -99,14 +100,15 @@ def main():
 
                     bbox_records.append({
                         "filename": filename,
-                        "width": img_w,
-                        "height": img_h,
+                        "width": int(img_w) if img_w is not None else None,
+                        "height": int(img_h) if img_h is not None else None,
                         "label_name": label_info["label_name"],
                         "label_value": label_info["label_value"],
-                        "bbox_left": bbox.get("left"),
-                        "bbox_top": bbox.get("top"),
-                        "bbox_width": bbox.get("width"),
-                        "bbox_height": bbox.get("height"),
+                        "bbox_left": int(round(bbox.get("left", 0))),
+                        "bbox_top": int(round(bbox.get("top", 0))),
+                        "bbox_width": int(round(bbox.get("width", 0))),
+                        "bbox_height": int(round(bbox.get("height", 0))),
+                        "exif_rotation": int(exif_rotation) if exif_rotation is not None else 1,
                     })
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
