@@ -1,7 +1,7 @@
 import json
 import os
 import cv2
-from PIL import Image, ImageOps
+from PIL import Image
 import numpy as np
 
 DATA_DIR = "data"
@@ -89,7 +89,7 @@ def normalize_image_size(img, size=256):
     y_offset = (size - new_h) // 2
 
     canvas[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
-    return canvas
+    return canvas, new_h, new_w, y_offset, x_offset
 
 def clahe_lighting_bgr(img):
     lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
@@ -125,11 +125,11 @@ if __name__ == "__main__":
             record["exif_rotation"],
             label_name
         )
-        resized = normalize_image_size(cropped)
+        resized, new_h, new_w, h_offset, w_offset = normalize_image_size(cropped)
         equalized = clahe_lighting_bgr(resized)
 
         preprocessed_images_dir = os.path.join(PRE_PROCESSED_DIR, IMAGES_DIR)
-        img_name = f"{get_img_name(imgSrc)}_preprocessed_{left}_{top}_{width}_{height}_{label_name}.jpg"
+        img_name = f"{get_img_name(imgSrc)}_preprocessed_{new_h}_{new_w}_{h_offset}_{w_offset}_{label_name}.jpg"
         img_path = os.path.join(preprocessed_images_dir, img_name)
         cv2.imwrite(img_path, equalized)
 

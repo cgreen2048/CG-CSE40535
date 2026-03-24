@@ -3,10 +3,7 @@ import os
 import cv2
 from PIL import Image, ImageOps
 import numpy as np
-
-IMAGES_DIR = "images"
-CROPPED_DIR = "../cropped"
-PRE_PROCESSED_DIR = "../preprocessed"
+from constants import IMAGES_DIR, CROPPED_DIR, PREPROCESSED_DIR
 
 def read_json_data(filename):
     with open(filename) as f:
@@ -104,7 +101,7 @@ if __name__ == "__main__":
     data = read_json_data("annotations.json")
     
     os.makedirs(os.path.join(CROPPED_DIR, IMAGES_DIR), exist_ok=True) 
-    os.makedirs(os.path.join(PRE_PROCESSED_DIR, IMAGES_DIR), exist_ok=True)
+    os.makedirs(os.path.join(PREPROCESSED_DIR, IMAGES_DIR), exist_ok=True)
     for record in data:
         imgSrc = os.path.join(IMAGES_DIR, record["filename"])
 
@@ -125,7 +122,7 @@ if __name__ == "__main__":
         resized = normalize_image_size(cropped)
         equalized = clahe_lighting_bgr(resized)
 
-        preprocessed_images_dir = os.path.join(PRE_PROCESSED_DIR, IMAGES_DIR)
+        preprocessed_images_dir = os.path.join(PREPROCESSED_DIR, IMAGES_DIR)
         img_name = f"{get_img_name(imgSrc)}_preprocessed_{left}_{top}_{width}_{height}_{label_name}.jpg"
         img_path = os.path.join(preprocessed_images_dir, img_name)
         cv2.imwrite(img_path, equalized)
