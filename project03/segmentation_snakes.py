@@ -62,6 +62,21 @@ if __name__ == "__main__":
         mask = np.zeros(img_gray.shape, dtype=np.uint8)
         fill_row_coords, fill_col_coords = draw.polygon(snake[:, 0], snake[:, 1], img_gray.shape)
         mask[fill_row_coords, fill_col_coords] = 255
+        rows_down = fill_row_coords + 1
+        valid = rows_down < mask.shape[0]
+        mask[rows_down[valid], fill_col_coords[valid]] = 255
+
+        rows_up = fill_row_coords - 1
+        valid = rows_up >= 0
+        mask[rows_up[valid], fill_col_coords[valid]] = 255
+
+        cols_right = fill_col_coords + 1
+        valid = cols_right < mask.shape[1]
+        mask[fill_row_coords[valid], cols_right[valid]] = 255
+
+        cols_left = fill_col_coords - 1
+        valid = cols_left >= 0
+        mask[fill_row_coords[valid], cols_left[valid]] = 255
 
 
         img_name_parts[2] = "segmented_snakes"

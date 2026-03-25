@@ -29,6 +29,8 @@ psi = 0.0       # keep it 0.0
 
 kernel = cv2.getGaborKernel((ksize, ksize), sigma, theta, lbd, gamma, psi, ktype=cv2.CV_32F)
 
+# take a vertical kernal and a horizontal kernel, bitwise or them
+
 # Normalize the kernel and remove the DC component (do you remember from our class discussion why we are doing this?)
 kernel /= kernel.sum()
 kernel -= kernel.mean()

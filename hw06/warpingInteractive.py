@@ -42,7 +42,9 @@ for y_dest in range(0, rows):
         a = x_src % 1
         b = y_src % 1
 
-        # bilinear interpolation
+        # bilinear interpolation of pixels around the computed source pixel
+        # this allows us to get the color of surrounding pixels to determine what colors the destination pixel should be
+        # this is the second step of "where is this pixel located in the original image?"
         destPX = (1-a)*(1-b)*I[j, i] + a*(1-b)*I[j, i+1] + (1-a)*b*I[j+1, i] + a*b*I[j+1, i+1]
         # x_dest = destPX[0,0]
         # y_dest = destPX[1,0]
