@@ -5,7 +5,7 @@ from skimage.color import rgb2gray
 from skimage import data, draw
 from skimage.filters import gaussian
 from skimage.segmentation import active_contour
-from constants import IMAGES_DIR, PREPROCESSED_DIR, SEGMENTED_DIR
+from constants import IMAGES_DIR, MASKS_DIR, PREPROCESSED_DIR, SEGMENTED_SNAKES_DIR
 
 
 def get_curve_from_bbox(new_h, new_w, h_offset, w_offset):
@@ -36,9 +36,10 @@ def run_active_contour(img_gray, init_curve):
 
 if __name__ == "__main__":
     preprocessed_images_dir = os.path.join(PREPROCESSED_DIR, IMAGES_DIR)
-    segmented_images_dir = os.path.join(SEGMENTED_DIR, IMAGES_DIR)
+    segmented_images_dir = os.path.join(SEGMENTED_SNAKES_DIR, IMAGES_DIR)
+    segmented_masks_dir = os.path.join(SEGMENTED_SNAKES_DIR, MASKS_DIR)
     os.makedirs(segmented_images_dir, exist_ok=True)
-    os.makedirs(os.path.join(SEGMENTED_DIR, "snakes"), exist_ok=True)
+    os.makedirs(segmented_masks_dir, exist_ok=True)
 
     for filename in os.listdir(preprocessed_images_dir):
         img_path = os.path.join(preprocessed_images_dir, filename)
@@ -82,7 +83,7 @@ if __name__ == "__main__":
         img_name_parts[2] = "segmented_snakes"
         img_name = "_".join(img_name_parts)
         img_path = os.path.join(segmented_images_dir, img_name)
-        img_snake_path = os.path.join(SEGMENTED_DIR, "snakes", img_name)
-        cv2.imwrite(img_path, mask)
-        cv2.imwrite(img_snake_path, img)
+        mask_path = os.path.join(segmented_masks_dir, img_name)
+        cv2.imwrite(img_path, img)
+        cv2.imwrite(mask_path, mask)
     print("Finished segmenting")
