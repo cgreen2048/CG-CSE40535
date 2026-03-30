@@ -63,7 +63,7 @@ def crop_image(imgSrc: str, bboxLeft: int, bboxTop: int, bboxWidth: int, bboxHei
 
     imgName = get_img_name(imgSrc) 
     
-    imgPath = f"{os.path.join(CROPPED_DIR, IMAGES_DIR)}/{imgName}_cropped_{bboxLeft}_{bboxTop}_{labelValue}.jpg" 
+    imgPath = f"{os.path.join(CROPPED_DIR, IMAGES_DIR)}/{imgName}_cropped_{bboxLeft}_{bboxTop}_{labelValue}.png" 
     cropped.save(imgPath) 
     return cv2.imread(imgPath)
 
@@ -100,7 +100,17 @@ def clahe_lighting_bgr(img):
     lab_merged = cv2.merge((clahe_l, a, b))
     return cv2.cvtColor(lab_merged, cv2.COLOR_LAB2BGR)
 
+def preprocess_one_image(imgSrc: str, bboxLeft: int, bboxTop: int, bboxWidth: int, bboxHeight: int, rotation: int, labelValue: str):
+    cropped = crop_image(imgSrc, bboxLeft, bboxTop, bboxWidth, bboxHeight, rotation, labelValue)
+    resized, new_h, new_w, h_offset, w_offset = normalize_image_size(cropped)
+    equalized = clahe_lighting_bgr(resized)
 
+    imgName = get_img_name(imgSrc) 
+    imgName = f"{imgName}_preprocessed_{new_h}_{new_w}_{h_offset}_{w_offset}_{labelValue}.png"
+    imgPath = f"{os.path.join(PRE_PROCESSED_DIR, IMAGES_DIR)}/{imgName}" 
+    cv2.imwrite(imgPath, equalized)
+
+    return imgName, equalized
 
 if __name__ == "__main__":
     data_path = os.path.join(RAW_DIR, "annotations.json")
@@ -129,7 +139,7 @@ if __name__ == "__main__":
         equalized = clahe_lighting_bgr(resized)
 
         preprocessed_images_dir = os.path.join(PRE_PROCESSED_DIR, IMAGES_DIR)
-        img_name = f"{get_img_name(imgSrc)}_preprocessed_{new_h}_{new_w}_{h_offset}_{w_offset}_{label_name}.jpg"
+        img_name = f"{get_img_name(imgSrc)}_preprocessed_{new_h}_{new_w}_{h_offset}_{w_offset}_{label_name}.png"
         img_path = os.path.join(preprocessed_images_dir, img_name)
         cv2.imwrite(img_path, equalized)
 
