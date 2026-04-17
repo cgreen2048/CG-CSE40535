@@ -45,9 +45,6 @@ def run_svm_classification():
         segmented_img, _, local_feature = segment_one_image(preprocessed_img_name, predictor, pad)
         _, _, sift_feature = extract_sift_features_one_image(segmented_img)
 
-        print("local_feature shape:", local_feature.shape)
-        print("sift_feature shape:", sift_feature.shape)
-
         feature_vectors_X.append(np.concatenate([local_feature, sift_feature]))
         feature_vectors_Y.append(labelValue)
 
@@ -66,6 +63,7 @@ def run_svm_classification():
         stratify=Y   # important if classes are imbalanced
     )
 
+    # Change to linear to see other results
     clf = svm.SVC(kernel='rbf', C=1.0, gamma='scale')
     clf.fit(X_train, Y_train)
 
